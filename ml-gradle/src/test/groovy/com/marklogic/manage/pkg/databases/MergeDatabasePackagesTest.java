@@ -26,15 +26,18 @@ public class MergeDatabasePackagesTest extends XmlHelper {
 
         db.assertElementExists("/db:package-database");
 
+        // Assert on simple elements
+        db.assertElementExists("//db:word-positions[. = 'true']");
+        db.assertElementExists("//db:collection-lexicon[. = 'true']");
+
+        // Assert on complex elements
         String indexPath = "/db:package-database/db:config/db:package-database-properties/db:range-element-indexes/db:range-element-index";
         db.assertElementExists(indexPath
                 + "[db:scalar-type = 'dateTime' and db:namespace-uri = 'http://marklogic.com/test' and db:localname = 'testDateTime']");
         db.assertElementExists(indexPath
                 + "[db:scalar-type = 'dateTime' and db:namespace-uri = 'http://marklogic.com/test' and db:localname = 'secondTestDateTime']");
-        db.assertElementExists("//db:word-positions[. = 'true']");
-        db.assertElementExists("//db:collection-lexicon[. = 'true']");
 
-        db.assertElementExists("//db:geospatial-element-indexes/db:geospatial-element-index[db:localname = 'testRegion']");
+        assertGeospatialIndexesExist(db);
 
         db.assertElementExists("/db:package-database/db:config/db:links/db:schema-database[. = 'my-schemas-database']");
         db.assertElementExists("/db:package-database/db:config/db:links/db:security-database[. = 'my-security-database']");
@@ -47,6 +50,11 @@ public class MergeDatabasePackagesTest extends XmlHelper {
 
         db.assertElementExists("//db:range-field-indexes/db:range-field-index[db:scalar-type = 'string' and db:field-name = 'secondField']");
         db.assertElementExists("//db:fields/db:field[db:field-name = 'secondField' and db:field-path[db:path = '/some/other/element' and db:weight = '1']]");
+
+        // Ensuring word query settings are covered as a field with no field name
+        db.assertElementExists("//db:fields/db:field[db:field-name = '' and db:include-root = 'true' and "
+                + "db:included-elements/db:included-element[db:namespace-uri = 'urn:sample'] and "
+                + "db:excluded-elements/db:excluded-element[db:namespace-uri = 'urn:sample']]");
 
         db.assertElementExists("//db:element-word-lexicons/db:element-word-lexicon[db:namespace-uri = 'urn:some:namespace' "
                 + "and db:localname = 'SomeElement' and db:collation = 'http://marklogic.com/collation/codepoint']");
@@ -72,4 +80,16 @@ public class MergeDatabasePackagesTest extends XmlHelper {
         };
     }
 
+    /**
+     * Not asserting on each element yet, just making sure at least one child element with text
+     * exists.
+     */
+    private void assertGeospatialIndexesExist(Fragment db) {
+        db.assertElementExists("//db:geospatial-element-indexes/db:geospatial-element-index[db:localname = 'testRegion']");
+        db.assertElementExists("//db:geospatial-element-indexes/db:geospatial-element-index[db:localname = 'theelement']");
+        db.assertElementExists("//db:geospatial-element-child-indexes/db:geospatial-element-child-index[db:localname = 'childname']");
+        db.assertElementExists("//db:geospatial-element-pair-indexes/db:geospatial-element-pair-index[db:parent-localname = 'parentname']");
+        db.assertElementExists("//db:geospatial-element-attribute-pair-indexes/db:geospatial-element-attribute-pair-index[db:parent-localname = 'parentname']");
+        db.assertElementExists("//db:geospatial-path-indexes/db:geospatial-path-index[db:path-expression = '/parent/child']");
+    }
 }
