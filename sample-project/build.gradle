@@ -79,7 +79,9 @@ dependencies {
   compile "com.marklogic:ml-java:0.9.5"
   testCompile "com.marklogic:ml-junit:0.9.5"
   testCompile 'com.jayway.restassured:rest-assured:2.3.1'
-  
+ 
+  // XCC  is required for executing corb task 
+  //runtime "com.marklogic:marklogic-xcc:7.0.4"
   // Located at https://github.com/rjrudin/marklogic-java/tree/gh-pages/releases/com/marklogic/corb
   runtime "com.marklogic:corb:1.0"
 }
