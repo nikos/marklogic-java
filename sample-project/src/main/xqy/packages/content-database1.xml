@@ -1,6 +1,10 @@
 <package-database xmlns="http://marklogic.com/manage/package/databases">
   <config>
     <package-database-properties>
+    
+      <!--  Must be true for CPF to work -->
+      <maintain-last-modified>true</maintain-last-modified>
+      
       <range-element-indexes>
         <range-element-index>
           <scalar-type>dateTime</scalar-type>
@@ -13,7 +17,7 @@
       </range-element-indexes>
     </package-database-properties>
     <links>
-      <triggers-database>sample-project-triggers</triggers-database>
+      <triggers-database>%%TRIGGERS_DATABASE_NAME%%</triggers-database>
     </links>
   </config>
 </package-database>
